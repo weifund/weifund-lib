@@ -2,20 +2,44 @@
 
 [![NPM version](http://img.shields.io/npm/v/weifund-lib.svg)](https://www.npmjs.org/package/weifund-lib) [![Build status](https://ci.appveyor.com/api/projects/status/wwajr0886e00g8je/branch/master?svg=true)](https://ci.appveyor.com/project/weifund/weifund-lib/branch/master) [![Coverage Status](https://coveralls.io/repos/github/weifund/weifund-lib/badge.svg?branch=master)](https://coveralls.io/github/weifund/weifund-lib?branch=master) [![NPM Downloads](https://img.shields.io/npm/dm/weifund-lib.svg)](https://www.npmjs.org/package/weifund-lib)
 
-The weifund-lib repo for babel code modules. Just install and run "start" to begin repo setup.
+A library with all WeiFund campaign data retrieval methods.
 
 ## Install
 
 ```
-git clone http://github.com/weifund/default
-cd default
 npm install
-npm start
+```
+
+## Future Design/Usage
+
+```js
+// get campaigns method
+const getCampaigns = require('weifund-lib').getCampaigns;
+
+// get campaigns
+getCampaigns({
+  // set network
+  // or 'testnet'
+  network: 'livenet',
+
+  // set campaign selector
+  // array (i.e. array of campaignIDs)
+  selector: [0],
+
+  // set web3 provider
+  web3Provider: {},
+
+  // set ipfs provider
+  ipfsProvider: {},
+}, function (getCampaignError, campaignsResult) {
+  // async callback with either error or camapign result
+  console.log(campaignsResult);
+});
 ```
 
 ## About
 
-Some about description for this repo.
+The WeiFund library. This contains all methods needed to pull campaign data from IPFS or the blockchain.
 
 ## Contributing
 
