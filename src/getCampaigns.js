@@ -2,7 +2,7 @@
 const Web3 = require('web3');
 
 // require ipfs from vendor
-const ipfs = require('browser-ipfs');
+const ipfs = require('ipfs-js');
 
 // get campaign
 const getCampaign = require('./getCampaign');
@@ -34,6 +34,8 @@ const checkOptions = function (options) {
   }
 };
 
+const ipfsAPI = require('ipfs-api');
+
 // load campaigns
 // returns object with campaign data by ID
 const getCampaigns = function (options, callback) {
@@ -55,7 +57,11 @@ const getCampaigns = function (options, callback) {
   const expectedCampaignsLoaded = selector.length;
 
   // set ipfs provider
-  ipfs.setProvider(ipfsProvider);
+  if (typeof window === 'undefined') {
+    ipfs.setProvider(ipfsAPI(ipfsProvider));
+  } else {
+    ipfs.setProvider(ipfsProvider);
+  }
 
   // set web3 provider
   web3.setProvider(web3Provider);
@@ -66,10 +72,6 @@ const getCampaigns = function (options, callback) {
     getCampaign({ web3: web3, ipfs: ipfs, campaignID: campaignID, network: network }, function (getCampaignError, getCampaignResult) {
       // add attempt
       attemptedCampaignsLoaded += 1;
-
-      if (getCampaignError) {
-        console.log(getCampaignError);
-      }
 
       // handle error
       if (!getCampaignError) {

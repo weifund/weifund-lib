@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 // get campaigns method
-/* const Web3 = require('web3');
+const Web3 = require('web3');
 const getCampaigns = require('../index').getCampaigns;
 
 
@@ -23,16 +23,12 @@ describe('getCampaigns', () => {
       ipfsProvider: { host: 'ipfs.infura.io', port: '5001', protocol: 'https' },
     }, function (getCampaignError, campaignsResult) {
       // async callback with either error or camapign result
-      // console.log(getCampaignError, campaignsResult); // eslint-disable-line
-
-      console.log(getCampaignError, Object.keys(campaignsResult));
-
       assert.equal(typeof campaignsResult, 'object');
-      // assert.equal(Object.keys(campaignsResult).length, 4);
+      assert.equal(Object.keys(campaignsResult).length, 4);
       done();
     });
   });
-}); */
+});
 
 describe('Array', () => {
   describe('#indexOf()', () => {
