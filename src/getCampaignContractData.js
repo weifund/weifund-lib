@@ -1,20 +1,9 @@
-// utils
+// bignumber and contracts
 const BigNumber = require('bignumber.js');
-
-// web3 instance and setup method
-const web3 = require('./web3').web3;
-
-// require contracts
-// setup campaign and data registries
-// Campaign/token contracts
-const contracts = require('./contracts');
-const campaignDataRegistry = contracts.campaignDataRegistryContract;
-const campaignRegistry = contracts.campaignRegistryContract;
-const staffPicks = contracts.staffPicksContract;
-const owned = contracts.ownedContractFactory;
+const contracts = require('weifund-contracts');
 
 // get additional campaign properties
-const getCampaignContractData = function (campaignAddress, callback) {
+const getCampaignContractData = function (options, callback) {
   var campaignObject = {
     id: null,
     addr: campaignAddress,
@@ -26,15 +15,19 @@ const getCampaignContractData = function (campaignAddress, callback) {
     registeredData: null,
   };
 
+  const campaignAddress = options.campaignAddress;
+  const web3 = options.web3;
+  const network = options.network;
+
   // get campaign registry data
-  campaignRegistry.interfaceOf(campaignAddress, function (interfaceError, interfaceAddress) {
+  contracts.CampaignRegistry(web3, network).interfaceOf(campaignAddress, function (interfaceError, interfaceAddress) {
     // handle owner error
     if (interfaceError) {
       return callback(interfaceError, null);
     }
 
     // get the campaign ID
-    campaignRegistry.idOf(campaignAddress, function (idError, campaignId) {
+    contracts.CampaignRegistry(web3, network).idOf(campaignAddress, function (idError, campaignId) {
       // handle owner error
       if (idError) {
         return callback(idError, null);
@@ -51,7 +44,7 @@ const getCampaignContractData = function (campaignAddress, callback) {
       }
 
       // get campaign owner
-      owned.at(campaignAddress).owner(function (ownerError, ownerAddress) {
+      contracts.factories.Owned(web3).at(campaignAddress).owner(function (ownerError, ownerAddress) {
         // handle owner error
         if (ownerError) {
           return callback(ownerError, null);
@@ -71,7 +64,7 @@ const getCampaignContractData = function (campaignAddress, callback) {
           campaignObject.balance = balanceResult;
 
           // staffPicks
-          staffPicks.activePicks(campaignAddress, function (staffPicksError, staffPickResult) {
+          contracts.StaffPicks(web3, network).activePicks(campaignAddress, function (staffPicksError, staffPickResult) {
             // handle owner error
             if (staffPicksError) {
               return callback(staffPicksError, null);
@@ -92,7 +85,7 @@ const getCampaignContractData = function (campaignAddress, callback) {
               campaignObject.campaignContractCode = campaignContractCode;
 
               // get ipfs data
-              campaignDataRegistry.storedData(campaignAddress, function (dataRegistryError, dataRegistryResult) {
+              contracts.CampaignDataRegistry(web3, network).storedData(campaignAddress, function (dataRegistryError, dataRegistryResult) {
                 // handle owner error
                 if (dataRegistryError) {
                   return callback(dataRegistryError, null);

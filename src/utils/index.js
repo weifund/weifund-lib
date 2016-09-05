@@ -1,10 +1,54 @@
 // requires
 const xss = require('xss');
 const BigNumber = require('bignumber.js');
+const base58 = require('bitcore/lib/encoding/base58.js');
 
 // log abstraction
 const log = function () {
   console.log.apply(console, arguments); // eslint-disable-line
+};
+
+
+// returns bool
+const isNonEmptyByteCode = function (code) {
+  return code !== '0x' && code !== '' && code !== false;
+};
+
+// to be build
+const isMultiSigContract = function () {
+  return false;
+};
+
+// is valid web3 address
+const isValidWeb3Address = function (address, web3Instance) {
+  return web3Instance.isAddress(address);
+};
+
+// is valid ipfs data
+const isValidCampaignData = function (data) {
+  return typeof data === 'object' && data !== null;
+};
+
+// is a valid campaign to be listed
+const isValidCampaign = function (data) {
+  if (data.hasName
+    && data.hasValidBeneficiaryAddress
+    && data.hasOwner
+    && !isNaN(data.progress)) {
+    return true;
+  }
+
+  return false;
+};
+
+// is valid ipfs data
+const isValidIPFSHash = function () {
+  return true;
+};
+
+// is standard campaign
+const isStandardCampaign = function (code) { // eslint-disable-line
+  return false; // String(code).includes(classes.StandardCampaign.bytecode);
 };
 
 // one day in unix seconds
@@ -200,6 +244,18 @@ const filterXSSObject = function (obj) {
   return obj;
 };
 
+// base 58 functions for IPFS hashes
+const base58ToHex = function (b58) {
+  var hexBuf = base58.decode(b58);
+  return hexBuf.toString('hex');
+};
+
+// base58 functions for IPFS
+const hexToBase58 = function (hexStr) {
+  var buf = new Buffer(hexStr, 'hex');
+  return base58.encode(buf);
+};
+
 module.exports = {
   log: log,
   isBigNumber: isBigNumber,
@@ -213,4 +269,13 @@ module.exports = {
   capitalizeFirstLetter: capitalizeFirstLetter,
   filterXSSObject: filterXSSObject,
   parseSolidityMethodName: parseSolidityMethodName,
+  isValidIPFSHash: isValidIPFSHash,
+  isStandardCampaign: isStandardCampaign,
+  isValidCampaign: isValidCampaign,
+  isValidWeb3Address: isValidWeb3Address,
+  isMultiSigContract: isMultiSigContract,
+  isNonEmptyByteCode: isNonEmptyByteCode,
+  isValidCampaignData: isValidCampaignData,
+  base58ToHex: base58ToHex,
+  hexToBase58: hexToBase58,
 };

@@ -1,60 +1,26 @@
-// utils
-const utils = require('./utils');
-const parseSolidityMethodInterface = utils.parseSolidityMethodInterface;
+// validators
 const validUrl = require('valid-url');
 const url = require('url');
 const videoUrlInspector = require('video-url-inspector');
 
-// web3 instance and setup method
-const web3 = require('./web3').web3;
+// utils
+const utils = require('./utils');
+const parseSolidityMethodInterface = utils.parseSolidityMethodInterface;
 
-// classes
-const classes = require('./contracts').classes;
-
-// returns bool
-const isNonEmptyByteCode = function (code) {
-  return code !== '0x' && code !== '' && code !== false;
-};
-
-// to be build
-const isMultiSigContract = function () {
-  return false;
-};
-
-// is valid web3 address
-const isValidWeb3Address = function (address) {
-  return web3.isAddress(address);
-};
-
-// is valid ipfs data
-const isValidCampaignData = function (data) {
-  return typeof data === 'object' && data !== null;
-};
-
-// is a valid campaign to be listed
-const isValidCampaign = function (data) {
-  if (data.hasName
-    && data.hasValidBeneficiaryAddress
-    && data.hasOwner
-    && !isNaN(data.progress)) {
-    return true;
-  }
-
-  return false;
-};
-
-// is valid ipfs data
-const isValidIPFSHash = function () {
-  return true;
-};
-
-// is standard campaign
-const isStandardCampaign = function (code) {
-  return String(code).includes(classes.StandardCampaign.bytecode);
-};
+// utils verifiers
+const isNonEmptyByteCode = utils.isNonEmptyByteCode;
+const isMultiSigContract = utils.isMultiSigContract;
+const isValidWeb3Address = utils.isValidWeb3Address;
+const isValidCampaignData = utils.isValidCampaignData;
+const isValidCampaign = utils.isValidCampaign;
+const isValidIPFSHash = utils.isValidIPFSHash;
+const isStandardCampaign = utils.isStandardCampaign;
 
 // parse campaign abi properties
-const parseCampaignDataObject = function (combinedCampaignData) {
+const parseCampaignDataObject = function (options) {
+  const combinedCampaignData = options.combinedCampaignData;
+  const web3 = options.web3;
+
   // campaign data object
   const campaignDataObject = Object.assign({
     active: false,
@@ -92,13 +58,13 @@ const parseCampaignDataObject = function (combinedCampaignData) {
     hasValidData: isValidCampaignData(combinedCampaignData.data),
     beneficiaryIsMultiSig: isMultiSigContract(combinedCampaignData.beneficiaryContractCode),
     beneficiaryIsContract: isNonEmptyByteCode(combinedCampaignData.beneficiaryContractCode),
-    hasValidInterfaceAddress: isValidWeb3Address(combinedCampaignData.interface),
+    hasValidInterfaceAddress: isValidWeb3Address(combinedCampaignData.interface, web3),
     contributeMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.contributeMethodABI),
     payoutMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.payoutMethodABI),
     refundMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.refundMethodABI),
-    hasValidBeneficiaryAddress: isValidWeb3Address(combinedCampaignData.beneficiary),
-    hasValidAddress: isValidWeb3Address(combinedCampaignData.addr),
-    hasValidOwnerAddress: isValidWeb3Address(combinedCampaignData.owner),
+    hasValidBeneficiaryAddress: isValidWeb3Address(combinedCampaignData.beneficiary, web3),
+    hasValidAddress: isValidWeb3Address(combinedCampaignData.addr, web3),
+    hasValidOwnerAddress: isValidWeb3Address(combinedCampaignData.owner, web3),
     campaignIsContract: isNonEmptyByteCode(combinedCampaignData.campaignContractCode),
     campaignIsStandard: isStandardCampaign(combinedCampaignData.campaignContractCode),
     loadTime: Math.round((new Date()).getTime() / 1000),

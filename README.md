@@ -20,7 +20,7 @@ const getCampaigns = require('weifund-lib').getCampaigns;
 getCampaigns({
   // set network
   // or 'testnet'
-  network: 'livenet',
+  network: 'testnet',
 
   // set campaign selector
   // array (i.e. array of campaignIDs)

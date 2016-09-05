@@ -1,12 +1,14 @@
 // utils
 const utils = require('./utils');
 const filterXSSObject = utils.filterXSSObject;
-
-// ipfs instance and setup
-const ipfs = require('./ipfs').ipfs;
+const hexToBase58 = utils.hexToBase58;
 
 // load campaign ipfs data
-const getCampaignIPFSData = function (registeredCampaignData, callback) {
+const getCampaignIPFSData = function (options, callback) {
+  // registered campaign data
+  const registeredCampaignData = options.registeredCampaignData;
+  const ipfs = options.ipfs;
+
   // setup defailt campaign data object
   const campaignDataObject = {
     ipfsHash: '',
@@ -15,7 +17,7 @@ const getCampaignIPFSData = function (registeredCampaignData, callback) {
 
   // has ipfs hash bytecode
   const dataBytecode = registeredCampaignData;
-  const ipfsHash = ipfs.utils.hexToBase58(dataBytecode.slice(2));
+  const ipfsHash = hexToBase58(dataBytecode.slice(2));
 
   // set ipfs hash data property
   campaignDataObject.ipfsHash = ipfsHash;

@@ -1,8 +1,7 @@
 // require contracts
 // setup campaign and data registries
 // Campaign/token contracts
-const contracts = require('./contracts');
-const campaign = contracts.campaignContractFactory;
+const contracts = require('weifund-contracts');
 
 // campaign interface properties
 const campaignInterfaceProperties = [
@@ -18,9 +17,14 @@ const campaignInterfaceProperties = [
 ];
 
 // helper callback, get all basic campaign interface properties
-const getCampaignInterfaceContractData = function (campaignInterfaceAddress, callback, propertyToLoadInput, campaignObjectInput) {
+const getCampaignInterfaceContractData = function (options, callback, propertyToLoadInput, campaignObjectInput) {
+  // dynamic variables
   var propertyToLoad = propertyToLoadInput;
   var campaignObject = campaignObjectInput;
+
+  // interface address
+  const campaignInterfaceAddress = options.campaignInterfaceAddress;
+  const web3 = options.web3;
 
   // campaign object
   if (typeof campaignObject === 'undefined') {
@@ -33,7 +37,7 @@ const getCampaignInterfaceContractData = function (campaignInterfaceAddress, cal
   }
 
   // setup interface instance
-  const interfaceInstance = campaign.at(campaignInterfaceAddress);
+  const interfaceInstance = contracts.factories.Campaign(web3).at(campaignInterfaceAddress);
 
   // property index
   const propertyIndex = campaignInterfaceProperties.indexOf(propertyToLoad);
@@ -52,7 +56,7 @@ const getCampaignInterfaceContractData = function (campaignInterfaceAddress, cal
     if (propertyIndex === campaignInterfaceProperties.length - 1) {
       callback(null, campaignObject);
     } else {
-      getCampaignInterfaceContractData(campaignInterfaceAddress,
+      getCampaignInterfaceContractData(options,
         callback,
         campaignInterfaceProperties[propertyIndex + 1],
         campaignObject);

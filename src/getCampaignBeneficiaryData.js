@@ -1,8 +1,8 @@
-// web3 instance and setup method
-const web3 = require('./web3').web3;
-
 // get campaign beneficiary data
-const getCampaignBeneficiaryData = function (beneficiaryAddress, callback) {
+const getCampaignBeneficiaryData = function (options, callback) {
+  const beneficiaryAddress = options.beneficiaryAddress;
+  const web3 = options.web3;
+
   // setup data object
   const campaignDataObject = {
     beneficiaryContractCode: '0x',

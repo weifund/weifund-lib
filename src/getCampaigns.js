@@ -1,57 +1,87 @@
-// require contracts
-// setup campaign and data registries
-// Campaign/token contracts
-const contracts = require('./contracts');
-const campaignRegistry = contracts.campaignRegistryContract;
+// require web3
+const Web3 = require('web3');
 
-// require load campaign
+// require ipfs from vendor
+const ipfs = require('browser-ipfs');
+
+// get campaign
 const getCampaign = require('./getCampaign');
+
+// check options
+const checkOptions = function (options) {
+  if (typeof options !== 'object') {
+    throw new Error('getCampaigns options, must be an object {}');
+  }
+
+  if (typeof options.network !== 'string') {
+    throw new Error('getCampaigns network property must be a string');
+  }
+
+  if (typeof options.ipfsProvider !== 'object') {
+    throw new Error('getCampaigns ipfsProvider must be a specified object');
+  }
+
+  if (typeof options.web3Provider !== 'object') {
+    throw new Error('getCampaigns web3Provider must be a specified object');
+  }
+
+  if (!Array.isArray(options.selector)) {
+    throw new Error('getCampaigns selector must be an array');
+  }
+
+  if (options.selector.length <= 0) {
+    throw new Error('getCampaigns selector array must have a length greater than zero');
+  }
+};
 
 // load campaigns
 // returns object with campaign data by ID
 const getCampaigns = function (options, callback) {
-  // loaded campaigns
-  var loadedCampaigns = {};
-  var expectedNumberToLoad = 0;
-  var actualNumberLoaded = 0;
+  // assembled return object
+  var assembledCampaignObject = {};
+  var attemptedCampaignsLoaded = 0;
 
-  // get total number of campaigns
-  campaignRegistry.numCampaigns(function (totalError, numCampaigns) {
-    var campaignID;
+  // check options
+  checkOptions(options);
 
-    // handle total error
-    if (totalError) {
-      return callback(`Error while getting total number of campaigns: ${totalError}`, null);
-    }
+  // new web3 object
+  const web3 = new Web3();
 
-    // total campaigns in contract
-    const totalCampaigns = numCampaigns.toNumber(10);
+  // const selector = options.selector;
+  const network = options.network;
+  const ipfsProvider = options.ipfsProvider;
+  const web3Provider = options.web3Provider;
+  const selector = options.selector;
+  const expectedCampaignsLoaded = selector.length;
 
-    // change expected number of campaigns to load to total
-    expectedNumberToLoad = totalCampaigns;
+  // set ipfs provider
+  ipfs.setProvider(ipfsProvider);
 
-    // load campaign and assign
-    // function context switch
-    const getCampaignAndAssign = function (campaignIDAssign) {
-      getCampaign(campaignIDAssign, function (campaignLoadError, campaignLoadResult) {
-        actualNumberLoaded += 1;
+  // set web3 provider
+  web3.setProvider(web3Provider);
 
-        // if no load error
-        if (!campaignLoadError) {
-          loadedCampaigns[campaignIDAssign] = campaignLoadResult;
-        }
+  // selector
+  selector.forEach(function (campaignID) {
+    // get campaign
+    getCampaign({ web3: web3, ipfs: ipfs, campaignID: campaignID, network: network }, function (getCampaignError, getCampaignResult) {
+      // add attempt
+      attemptedCampaignsLoaded += 1;
 
-        // fire end callback
-        if (expectedNumberToLoad === actualNumberLoaded) {
-          callback(null, loadedCampaigns);
-        }
-      });
-    };
+      if (getCampaignError) {
+        console.log(getCampaignError);
+      }
 
-    // loop through campaigns and load from registry
-    for (campaignID = totalCampaigns - 1; campaignID >= 0; campaignID--) {
-      getCampaignAndAssign(campaignID);
-    }
+      // handle error
+      if (!getCampaignError) {
+        assembledCampaignObject[getCampaignResult.id] = getCampaignResult;
+      }
+
+      // if all campaigns selected where attempted loaded
+      if (attemptedCampaignsLoaded === expectedCampaignsLoaded) {
+        // loaded campaigns
+        callback(null, assembledCampaignObject);
+      }
+    });
   });
 };
 

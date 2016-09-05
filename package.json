@@ -6,14 +6,14 @@
     "start": "",
     "npmcheckversion": "node ./scripts/npmcheckversion.js",
     "preinstall": "npm run npmcheckversion",
-    "test": "mocha src/__tests__/**/*.js -R spec",
+    "test": "mocha src/__tests__/**/*.js -R spec --timeout 20000",
     "prebuild": "npm run test && rimraf dist && mkdir dist",
     "build": "browserify src/index.js -o dist/bundle.js",
     "prepublish": "npm run build",
     "release": "npmpub",
     "pretest": "npm run lint",
     "lint": "npm run lint:js",
-    "lint:eslint": "eslint --ignore-path .gitignore ./vendor/ipfs.min.js",
+    "lint:eslint": "eslint --ignore-path .eslintignore",
     "lint:js": "npm run lint:eslint -- .",
     "lint:staged": "lint-staged",
     "coveralls": "cat ./coverage/lcov/lcov.info | coveralls"
@@ -41,13 +41,15 @@
   "license": "MIT",
   "dependencies": {
     "bignumber.js": "^2.4.0",
+    "bitcore": "^0.13.0",
+    "browser-ipfs": "git+https://github.com/silentcicero/browser-ipfs.git",
     "ethereumjs-abi": "^0.6.3",
-    "ipfs-js": "0.0.11",
     "markdown": "^0.5.0",
     "url": "^0.11.0",
     "valid-url": "^1.0.9",
     "video-url-inspector": "^1.0.2",
     "web3": "^0.17.0-alpha",
+    "weifund-contracts": "git+https://github.com/weifund/weifund-contracts.git",
     "xss": "^0.2.13"
   },
   "devDependencies": {
@@ -89,6 +91,7 @@
       "sourceType": "module"
     },
     "rules": {
+      "new-cap": 0,
       "consistent-return": 0,
       "import/no-unresolved": 2,
       "comma-dangle": [
