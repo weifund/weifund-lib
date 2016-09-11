@@ -6,7 +6,7 @@ const contracts = require('weifund-contracts');
 const getCampaignContractData = function (options, callback) {
   var campaignObject = {
     id: null,
-    addr: campaignAddress,
+    addr: options.campaignAddress,
     interface: '0x',
     owner: '0x',
     campaignContractCode: '0x',
