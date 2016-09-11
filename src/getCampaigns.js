@@ -5,7 +5,8 @@ const Web3 = require('web3');
 var ipfs;
 
 const nodeIPFS = require('ipfs-js');
-const browserIPFS = require('browser-ipfs');
+// const browserIPFS = require('browser-ipfs');
+const browserIPFSMIN = require('./ipfs.min.js');
 
 
 // get campaign
@@ -43,7 +44,7 @@ if (typeof window === 'undefined') {
   ipfs = nodeIPFS;
   ipfsAPI = require('ipfs-api'); // eslint-disable-line
 } else {
-  ipfs = browserIPFS;
+  ipfs = browserIPFSMIN;
 }
 
 // load campaigns
