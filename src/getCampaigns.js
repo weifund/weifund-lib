@@ -34,7 +34,10 @@ const checkOptions = function (options) {
   }
 };
 
-const ipfsAPI = require('ipfs-api');
+var ipfsAPI = {};
+if (typeof window === 'undefined') {
+  ipfsAPI = require('ipfs-api'); // eslint-disable-line
+}
 
 // load campaigns
 // returns object with campaign data by ID
