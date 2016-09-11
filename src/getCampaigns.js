@@ -2,7 +2,11 @@
 const Web3 = require('web3');
 
 // require ipfs from vendor
-const ipfs = require('ipfs-js');
+var ipfs;
+
+const nodeIPFS = require('ipfs-js');
+const browserIPFS = require('browser-ipfs');
+
 
 // get campaign
 const getCampaign = require('./getCampaign');
@@ -36,7 +40,10 @@ const checkOptions = function (options) {
 
 var ipfsAPI = {};
 if (typeof window === 'undefined') {
+  ipfs = nodeIPFS;
   ipfsAPI = require('ipfs-api'); // eslint-disable-line
+} else {
+  ipfs = browserIPFS;
 }
 
 // load campaigns
