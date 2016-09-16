@@ -79,5 +79,6 @@ We communicate via [issues](https://github.com/weifund/weifund-lib/issues) and [
 ## Licence
 
 ```
-All Rights Reserved. WeiFund is currently exploring the appropriate license structure and this will be updated when a conclusion is reached.
+All Rights Reserved. WeiFund is currently exploring the appropriate license structure 
+and this will be updated when a conclusion is reached.
 ```
