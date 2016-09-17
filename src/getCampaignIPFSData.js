@@ -35,7 +35,7 @@ const getCampaignIPFSData = function (options, callback) {
     }
 
     // set IPFS data
-    campaignDataObject.data = filterXSSObject(catJsonResult);
+    campaignDataObject.data = filterXSSObject(JSON.parse(JSON.stringify(catJsonResult)));
 
     // return data callback
     callback(null, campaignDataObject);

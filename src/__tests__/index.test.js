@@ -14,7 +14,7 @@ describe('getCampaigns', () => {
 
       // set campaign selector
       // array (i.e. array of campaignIDs)
-      selector: [1, 4, 5, 10],
+      selector: [1, 3, 4, 5, 10],
 
       // set web3 provider
       web3Provider: new Web3.providers.HttpProvider('https://morden.infura.io/'),
@@ -24,8 +24,10 @@ describe('getCampaigns', () => {
     }, function (getCampaignError, campaignsResult) {
       // async callback with either error or camapign result
 
+      console.log(campaignsResult[3]);
+
       assert.equal(typeof campaignsResult, 'object');
-      assert.equal(Object.keys(campaignsResult).length, 4);
+      assert.equal(Object.keys(campaignsResult).length, 5);
       done();
     });
   });
