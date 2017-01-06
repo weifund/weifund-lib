@@ -7,10 +7,10 @@ A library with all WeiFund campaign data retrieval methods.
 ## Install
 
 ```
-npm install
+npm install --save weifund-lib
 ```
 
-## Future Design/Usage
+## Usage
 
 ```js
 // get campaigns method
@@ -20,17 +20,11 @@ const getCampaigns = require('weifund-lib').getCampaigns;
 getCampaigns({
   // set network
   // or 'testnet'
-  network: 'testnet',
+  network: 'ropsten',
 
   // set campaign selector
   // array (i.e. array of campaignIDs)
   selector: [0],
-
-  // set web3 provider
-  web3Provider: {},
-
-  // set ipfs provider
-  ipfsProvider: {},
 }, function (getCampaignError, campaignsResult) {
   // async callback with either error or camapign result
   console.log(campaignsResult);
@@ -79,6 +73,6 @@ We communicate via [issues](https://github.com/weifund/weifund-lib/issues) and [
 ## Licence
 
 ```
-All Rights Reserved. WeiFund is currently exploring the appropriate license structure 
+All Rights Reserved. WeiFund is currently exploring the appropriate license structure
 and this will be updated when a conclusion is reached.
 ```
