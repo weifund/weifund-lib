@@ -1,13 +1,6 @@
 // require web3
 const Web3 = require('web3');
-
-// require ipfs from vendor
-var ipfs;
-
-const nodeIPFS = require('ipfs-js');
-// const browserIPFS = require('browser-ipfs');
-const browserIPFSMIN = require('./ipfs.min.js');
-
+const IPFS = require('ipfs-mini');
 
 // get campaign
 const getCampaign = require('./getCampaign');
@@ -22,14 +15,6 @@ const checkOptions = function (options) {
     throw new Error('getCampaigns network property must be a string');
   }
 
-  if (typeof options.ipfsProvider !== 'object') {
-    throw new Error('getCampaigns ipfsProvider must be a specified object');
-  }
-
-  if (typeof options.web3Provider !== 'object') {
-    throw new Error('getCampaigns web3Provider must be a specified object');
-  }
-
   if (!Array.isArray(options.selector)) {
     throw new Error('getCampaigns selector must be an array');
   }
@@ -38,14 +23,6 @@ const checkOptions = function (options) {
     throw new Error('getCampaigns selector array must have a length greater than zero');
   }
 };
-
-var ipfsAPI = {};
-if (typeof window === 'undefined') {
-  ipfs = nodeIPFS;
-  ipfsAPI = require('ipfs-api'); // eslint-disable-line
-} else {
-  ipfs = browserIPFSMIN;
-}
 
 // load campaigns
 // returns object with campaign data by ID
@@ -57,30 +34,23 @@ const getCampaigns = function (options, callback) {
   // check options
   checkOptions(options);
 
-  // new web3 object
-  const web3 = new Web3();
-
   // const selector = options.selector;
   const network = options.network;
-  const ipfsProvider = options.ipfsProvider;
-  const web3Provider = options.web3Provider;
+  const ipfsProvider = options.ipfsProvider || { host: 'ipfs.infura.io', port: 5001, protocol: 'https' };
+  const web3Provider = options.web3Provider || new Web3.providers.HttpProvider('https://ropsten.infura.io/');
   const selector = options.selector;
   const expectedCampaignsLoaded = selector.length;
 
-  // set ipfs provider
-  if (typeof window === 'undefined') {
-    ipfs.setProvider(ipfsAPI(ipfsProvider));
-  } else {
-    ipfs.setProvider(ipfsProvider);
-  }
+  // new web3 object
+  const web3 = new Web3(web3Provider);
 
-  // set web3 provider
-  web3.setProvider(web3Provider);
+  // set ipfs var
+  const ipfs = new IPFS(ipfsProvider);
 
   // selector
   selector.forEach(function (campaignID) {
     // get campaign
-    getCampaign({ web3: web3, ipfs: ipfs, campaignID: campaignID, network: network }, function (getCampaignError, getCampaignResult) {
+    getCampaign({ web3, ipfs, campaignID, network }, function (getCampaignError, getCampaignResult) {
       // add attempt
       attemptedCampaignsLoaded += 1;
 

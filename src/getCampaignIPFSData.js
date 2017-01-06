@@ -28,7 +28,7 @@ const getCampaignIPFSData = function (options, callback) {
   }
 
   // get data from IPFS
-  ipfs.catJson(ipfsHash, function (catJsonError, catJsonResult) {
+  ipfs.catJSON(ipfsHash, function (catJsonError, catJsonResult) {
     // handle ipfs data
     if (catJsonError) {
       return callback(catJsonError, null);
@@ -38,7 +38,7 @@ const getCampaignIPFSData = function (options, callback) {
     campaignDataObject.data = filterXSSObject(JSON.parse(JSON.stringify(catJsonResult)));
 
     // return data callback
-    callback(null, campaignDataObject);
+    return callback(null, campaignDataObject);
   });
 };
 

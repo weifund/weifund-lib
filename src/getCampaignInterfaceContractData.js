@@ -1,16 +1,17 @@
 // require contracts
 // setup campaign and data registries
 // Campaign/token contracts
-const contracts = require('weifund-contracts');
 
 // campaign interface properties
 const campaignInterfaceProperties = [
   'amountRaised',
   'beneficiary',
-  'contributeMethodABI',
   'expiry',
   'fundingGoal',
+  'fundingCap',
   'name',
+  'stage',
+  'contributeMethodABI',
   'payoutMethodABI',
   'refundMethodABI',
   'version',
@@ -24,7 +25,7 @@ const getCampaignInterfaceContractData = function (options, callback, propertyTo
 
   // interface address
   const campaignInterfaceAddress = options.campaignInterfaceAddress;
-  const web3 = options.web3;
+  const contracts = options.contracts;
 
   // campaign object
   if (typeof campaignObject === 'undefined') {
@@ -37,7 +38,7 @@ const getCampaignInterfaceContractData = function (options, callback, propertyTo
   }
 
   // setup interface instance
-  const interfaceInstance = contracts.factories.Campaign(web3).at(campaignInterfaceAddress);
+  const interfaceInstance = contracts.Campaign.factory.at(campaignInterfaceAddress);
 
   // property index
   const propertyIndex = campaignInterfaceProperties.indexOf(propertyToLoad);

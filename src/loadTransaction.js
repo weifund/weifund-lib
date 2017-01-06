@@ -1,5 +1,4 @@
 // load web3 and campaign registry contract
-const contracts = require('weifund-contracts');
 const filterXSSObject = require('./utils/').filterXSSObject;
 
 /*
@@ -14,7 +13,7 @@ loadTransaction('0xdac1f3420d7a3dfc400ef180fb9e357ce5fe7a0e96ecbae5ac85aef2e2fa0
 const loadTransaction = function (options, callback) {
   const txHash = options.txHash;
   const web3 = options.web3;
-  const network = options.network;
+  const contracts = options.contracts;
 
   var transactionObject = {
     transactionHash: txHash,
@@ -38,14 +37,14 @@ const loadTransaction = function (options, callback) {
     transactionObject.receipt = txReceiptResult;
 
     // get id of campaign
-    contracts.CampaignRegistry(web3, network).idOf(txReceiptResult.to, function (campaignIdError, campaignIdResult) {
+    contracts.CampaignRegistry.instance().idOf(txReceiptResult.to, function (campaignIdError, campaignIdResult) {
       // handle error
       if (campaignIdError) {
         return callback(campaignIdError, null);
       }
 
       // get address to confirm transaction was to a campaign
-      contracts.CampaignRegistry(web3, network).addressOf(campaignIdResult, function (campaignAddressError, campaignAddressResult) {
+      contracts.CampaignRegistry.instance().addressOf(campaignIdResult, function (campaignAddressError, campaignAddressResult) {
         // handle error
         if (campaignAddressError) {
           return callback(campaignAddressError, null);

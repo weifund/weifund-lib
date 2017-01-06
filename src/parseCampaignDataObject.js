@@ -5,24 +5,24 @@ const videoUrlInspector = require('video-url-inspector');
 
 // utils
 const utils = require('./utils');
-const parseSolidityMethodInterface = utils.parseSolidityMethodInterface;
+const parseSolidityMethodInterface = utils.parseSolidityMethodInterface; // eslint-disable-line
 
 // utils verifiers
-const isNonEmptyByteCode = utils.isNonEmptyByteCode;
-const isMultiSigContract = utils.isMultiSigContract;
-const isValidWeb3Address = utils.isValidWeb3Address;
-const isValidCampaignData = utils.isValidCampaignData;
-const isValidCampaign = utils.isValidCampaign;
-const isValidIPFSHash = utils.isValidIPFSHash;
-const isStandardCampaign = utils.isStandardCampaign;
+const isNonEmptyByteCode = utils.isNonEmptyByteCode; // eslint-disable-line
+const isMultiSigContract = utils.isMultiSigContract; // eslint-disable-line
+const isValidWeb3Address = utils.isValidWeb3Address; // eslint-disable-line
+const isValidCampaignData = utils.isValidCampaignData; // eslint-disable-line
+const isValidCampaign = utils.isValidCampaign; // eslint-disable-line
+const isValidIPFSHash = utils.isValidIPFSHash; // eslint-disable-line
+const isStandardCampaign = utils.isStandardCampaign; // eslint-disable-line
 
 // parse campaign abi properties
 const parseCampaignDataObject = function (options) {
-  const combinedCampaignData = options.combinedCampaignData;
-  const web3 = options.web3;
+  const combinedCampaignData = options.combinedCampaignData; // eslint-disable-line
+  const web3 = options.web3; // eslint-disable-line
 
   // campaign data object
-  const campaignDataObject = Object.assign({
+  const campaignDataObject = Object.assign({}, {
     active: false,
     hasName: false,
     hasFailed: false,
@@ -53,15 +53,16 @@ const parseCampaignDataObject = function (options) {
     hasValidImage: false,
     imageUrl: `https://unsplash.it/450/450?image=${combinedCampaignData.id || 0}`,
 
+
     interfaceIsCampaignAddress: false,
     hasValidIPFSHash: isValidIPFSHash(combinedCampaignData.ipfsHash),
     hasValidData: isValidCampaignData(combinedCampaignData.data),
     beneficiaryIsMultiSig: isMultiSigContract(combinedCampaignData.beneficiaryContractCode),
     beneficiaryIsContract: isNonEmptyByteCode(combinedCampaignData.beneficiaryContractCode),
     hasValidInterfaceAddress: isValidWeb3Address(combinedCampaignData.interface, web3),
-    contributeMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.contributeMethodABI),
-    payoutMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.payoutMethodABI),
-    refundMethodABIObject: parseSolidityMethodInterface(combinedCampaignData.refundMethodABI),
+    contributeMethodABIObject: {}, // parseSolidityMethodInterface(combinedCampaignData.contributeMethodABI),
+    payoutMethodABIObject: {}, // parseSolidityMethodInterface(combinedCampaignData.payoutMethodABI),
+    refundMethodABIObject: {}, // parseSolidityMethodInterface(combinedCampaignData.refundMethodABI),
     hasValidBeneficiaryAddress: isValidWeb3Address(combinedCampaignData.beneficiary, web3),
     hasValidAddress: isValidWeb3Address(combinedCampaignData.addr, web3),
     hasValidOwnerAddress: isValidWeb3Address(combinedCampaignData.owner, web3),
