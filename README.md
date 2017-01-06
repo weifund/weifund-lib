@@ -1,6 +1,7 @@
 # weifund-lib
-
+<!--
 [![NPM version](http://img.shields.io/npm/v/weifund-lib.svg)](https://www.npmjs.org/package/weifund-lib) [![Build status](https://ci.appveyor.com/api/projects/status/wwajr0886e00g8je/branch/master?svg=true)](https://ci.appveyor.com/project/weifund/weifund-lib/branch/master) [![Coverage Status](https://coveralls.io/repos/github/weifund/weifund-lib/badge.svg?branch=master)](https://coveralls.io/github/weifund/weifund-lib?branch=master) [![NPM Downloads](https://img.shields.io/npm/dm/weifund-lib.svg)](https://www.npmjs.org/package/weifund-lib)
+-->
 
 A library with all WeiFund campaign data retrieval methods.
 
@@ -53,10 +54,9 @@ There is always a lot of work to do, and will have many rules to maintain. So pl
 - Create, enhance, and debug rules (see our guide to ["Working on rules"](CONTRIBUTING.md)).
 - Improve documentation.
 - Chime in on any open issue or pull request.
-- Open new issues about your ideas for making stylelint better, and pull requests to show us how your idea works.
+- Open new issues about your ideas for making `weifund-lib` better, and pull requests to show us how your idea works.
 - Add new tests to *absolutely anything*.
 - Work on [improving performance of rules](docs/developer-guide/benchmarks.md).
-- Create or contribute to ecosystem tools, like the plugins for Atom and Sublime Text.
 - Spread the word.
 
 Please consult our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md) docs before helping out.
