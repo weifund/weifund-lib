@@ -33,7 +33,9 @@ const parseCampaignDataObject = function (options) {
     hasIPFSHash: false,
     hasData: false,
     hasOwner: false,
+    hasStage: true,
     hasFundingGoal: true,
+    hasFundingCap: true,
     hasAmountRaised: false,
 
     hasValidContributeMethodABI: false,

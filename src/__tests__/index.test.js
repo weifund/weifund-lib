@@ -13,7 +13,7 @@ describe('getCampaigns', () => {
 
       // set campaign selector
       // array (i.e. array of campaignIDs)
-      selector: [0],
+      selector: [1],
 
       // set ipfs provider
       ipfsProvider: { host: 'ipfs.infura.io', port: 5001, protocol: 'https' },
