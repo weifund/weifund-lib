@@ -19,7 +19,7 @@ describe('getCampaigns', () => {
       ipfsProvider: { host: 'ipfs.infura.io', port: 5001, protocol: 'https' },
     }, function (getCampaignError, campaignsResult) {
       // async callback with either error or camapign result
-      console.log(campaignsResult);
+      console.log(getCampaignError, campaignsResult);
 
       assert.equal(typeof campaignsResult, 'object');
       done();

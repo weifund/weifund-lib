@@ -12,6 +12,7 @@ const getCampaignInterfaceContractData = require('./getCampaignInterfaceContract
 const getCampaignBeneficiaryData = require('./getCampaignBeneficiaryData');
 const getCampaignIPFSData = require('./getCampaignIPFSData');
 const parseCampaignDataObject = require('./parseCampaignDataObject');
+const BigNumber = require('bignumber.js');
 
 // load campaign
 const getCampaign = function (options, callback) {
@@ -64,20 +65,29 @@ const getCampaign = function (options, callback) {
               return callback(ipfsError, null);
             }
 
-            // main campaign object
-            const campaignDataObject = parseCampaignDataObject({
-              web3,
-              network,
-              contracts,
-              combinedCampaignData: Object.assign({},
-                campaignDataResult,
-                interfaceDataResult,
-                beneficiaryResult,
-                ipfsResult),
-            });
+            // get blocknumber
+            web3.eth.getBlockNumber((blockNumberError, blockNumber) => {
+              // handle campaign contract data error
+              if (blockNumberError) {
+                return callback(blockNumberError, null);
+              }
 
-            // fire final callback
-            return callback(null, campaignDataObject);
+              // main campaign object
+              const campaignDataObject = parseCampaignDataObject({
+                web3,
+                network,
+                contracts,
+                blockNumber: new BigNumber(blockNumber),
+                combinedCampaignData: Object.assign({},
+                  campaignDataResult,
+                  interfaceDataResult,
+                  beneficiaryResult,
+                  ipfsResult),
+              });
+
+              // fire final callback
+              return callback(null, campaignDataObject);
+            });
           });
         });
       });
