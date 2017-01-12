@@ -7,7 +7,6 @@ const campaignInterfaceProperties = [
   'amountRaised',
   'beneficiary',
   'expiry',
-  'enhancer',
   'fundingGoal',
   'fundingCap',
   'name',

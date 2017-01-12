@@ -35,66 +35,99 @@ const getCampaignContractData = function (options, callback) {
       // id
       campaignObject.id = campaignId.toString(10);
 
-      // handle interface address
-      if (interfaceAddress === '0x') {
-        campaignObject.interface = campaignAddress;
-      } else {
-        campaignObject.interface = interfaceAddress;
-      }
-
-      // get campaign owner
-      contracts.Owned.factory.at(campaignAddress).owner(function (ownerError, ownerAddress) {
+      // get the campaign ID
+      contracts.StandardCampaignFactory.instance().isService(campaignAddress, function (campaignFactoryServiceError, isStandardCampaignFactoryService) {
         // handle owner error
-        if (ownerError) {
-          return callback(ownerError, null);
+        if (campaignFactoryServiceError) {
+          return callback(campaignFactoryServiceError, null);
         }
 
-        // set owner property
-        campaignObject.owner = ownerAddress;
+        // id
+        campaignObject.fromStandardCampaignFactory = isStandardCampaignFactoryService;
 
-        // get campaign balanace
-        web3.eth.getBalance(campaignAddress, function (balanceError, balanceResult) {
+        // get the campaign ID
+        contracts.StandardCampaign.factory.at(campaignAddress).enhancer(function (enhancerError, enhancerResult) {
           // handle owner error
-          if (balanceError) {
-            return callback(balanceError, null);
+          if (enhancerError) {
+            return callback(enhancerError, null);
           }
 
-          // set balance properties
-          campaignObject.balance = balanceResult;
+          // set enhancer
+          campaignObject.enhancer = enhancerResult;
 
-          // staffPicks
-          contracts.CurationRegistry.instance().serviceApprovedBy('', campaignAddress, function (staffPicksError, staffPickResult) {
+          // get the campaign ID
+          contracts.Model1Enhancer.factory.at(enhancerResult).token(function (tokenError, tokenResult) {
             // handle owner error
-            if (staffPicksError) {
-              return callback(staffPicksError, null);
+            if (tokenError) {
+              return callback(tokenError, null);
             }
 
-            // campaign object is staff pick
-            campaignObject.staffPick = staffPickResult;
+            // set enhancer
+            campaignObject.token = tokenResult;
 
-            // get contract code
-            web3.eth.getCode(campaignAddress, function (campaignContractCodeError, campaignContractCode) {
+            // handle interface address
+            if (interfaceAddress === '0x') {
+              campaignObject.interface = campaignAddress;
+            } else {
+              campaignObject.interface = interfaceAddress;
+            }
+
+            // get campaign owner
+            contracts.Owned.factory.at(campaignAddress).owner(function (ownerError, ownerAddress) {
               // handle owner error
-              if (campaignContractCodeError) {
-                return callback(campaignContractCodeError, null);
+              if (ownerError) {
+                return callback(ownerError, null);
               }
 
-              // handle campaign contract code error
-              // set campaign code
-              campaignObject.campaignContractCode = campaignContractCode;
+              // set owner property
+              campaignObject.owner = ownerAddress;
 
-              // get ipfs data
-              contracts.CampaignDataRegistry.instance().storedData(campaignAddress, function (dataRegistryError, dataRegistryResult) {
+              // get campaign balanace
+              web3.eth.getBalance(campaignAddress, function (balanceError, balanceResult) {
                 // handle owner error
-                if (dataRegistryError) {
-                  return callback(dataRegistryError, null);
+                if (balanceError) {
+                  return callback(balanceError, null);
                 }
 
-                // registered data property
-                campaignObject.registeredData = dataRegistryResult;
+                // set balance properties
+                campaignObject.balance = balanceResult;
 
-                // fire callback
-                callback(null, campaignObject);
+                // staffPicks
+                contracts.CurationRegistry.instance().serviceApprovedBy('', campaignAddress, function (staffPicksError, staffPickResult) {
+                  // handle owner error
+                  if (staffPicksError) {
+                    return callback(staffPicksError, null);
+                  }
+
+                  // campaign object is staff pick
+                  campaignObject.staffPick = staffPickResult;
+
+                  // get contract code
+                  web3.eth.getCode(campaignAddress, function (campaignContractCodeError, campaignContractCode) {
+                    // handle owner error
+                    if (campaignContractCodeError) {
+                      return callback(campaignContractCodeError, null);
+                    }
+
+                    // handle campaign contract code error
+                    // set campaign code
+                    campaignObject.campaignContractCode = campaignContractCode;
+
+                    // get ipfs data
+                    contracts.CampaignDataRegistry.instance().storedData(campaignAddress, function (dataRegistryError, dataRegistryResult) {
+                      // handle owner error
+                      if (dataRegistryError) {
+                        return callback(dataRegistryError, null);
+                      }
+
+                      // registered data property
+                      campaignObject.registeredData = dataRegistryResult;
+
+                      // fire callback
+                      callback(null, campaignObject);
+                    });
+                  });
+                });
               });
             });
           });

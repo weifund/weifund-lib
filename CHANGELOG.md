@@ -1,4 +1,4 @@
-# 0.0.1 -- Scaffolding
+# 0.1.2 -- Scaffolding
 
 1. Code of Conduct established
 2. Contributing rules

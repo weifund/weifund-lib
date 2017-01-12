@@ -5,33 +5,32 @@ const base58 = require('bitcore/lib/encoding/base58.js');
 const solidityToABI = require('solidity-to-abi');
 
 // log abstraction
-const log = function () {
+function log() {
   console.log.apply(console, arguments); // eslint-disable-line
-};
-
+}
 
 // returns bool
-const isNonEmptyByteCode = function (code) {
+function isNonEmptyByteCode(code) {
   return code !== '0x' && code !== '' && code !== false;
-};
+}
 
 // to be build
-const isMultiSigContract = function () {
+function isMultiSigContract() {
   return false;
-};
+}
 
 // is valid web3 address
-const isValidWeb3Address = function (address, web3Instance) {
+function isValidWeb3Address(address, web3Instance) {
   return web3Instance.isAddress(address);
-};
+}
 
 // is valid ipfs data
-const isValidCampaignData = function (data) {
+function isValidCampaignData(data) {
   return typeof data === 'object' && data !== null;
-};
+}
 
 // is a valid campaign to be listed
-const isValidCampaign = function (data) {
+function isValidCampaign(data) {
   if (data.hasName
     && data.hasValidBeneficiaryAddress
     && data.hasOwner
@@ -40,17 +39,17 @@ const isValidCampaign = function (data) {
   }
 
   return false;
-};
+}
 
 // is valid ipfs data
-const isValidIPFSHash = function () {
+function isValidIPFSHash() {
   return true;
-};
+}
 
 // is standard campaign
-const isStandardCampaign = function (code) { // eslint-disable-line
+function isStandardCampaign(code) { // eslint-disable-line
   return false; // String(code).includes(classes.StandardCampaign.bytecode);
-};
+}
 
 // one day in unix seconds
 const oneDay = 24 * 60 * 60 * 1000;
@@ -59,17 +58,17 @@ const oneDay = 24 * 60 * 60 * 1000;
 const emptyWeb3Address = '0x0000000000000000000000000000000000000000';
 
 // provide etherscan link
-const etherScanAddressUrl = function (address, selectedNetwork) {
+function etherScanAddressUrl(address, selectedNetwork) {
   return `http://${`${selectedNetwork}.` || ''}etherscan.io/address/${address}`;
-};
+}
 
 // provide etherscan link
-const etherScanTxHashUrl = function (txHash, selectedNetwork) {
+function etherScanTxHashUrl(txHash, selectedNetwork) {
   return `http://${`${selectedNetwork}.` || ''}etherscan.io/tx/${txHash}`;
-};
+}
 
 // parse raw campaign data into an object
-const parseCampaignRegistryData = function (campaignID, rawCampaignData) {
+function parseCampaignRegistryData(campaignID, rawCampaignData) {
   const dataObject = {
     id: parseInt(campaignID, 10),
     addr: rawCampaignData[0],
@@ -84,10 +83,10 @@ const parseCampaignRegistryData = function (campaignID, rawCampaignData) {
 
   // return new data object
   return dataObject;
-};
+}
 
 // build inputs or outputs array from raw inputs string
-const buildInputsArray = function (rawInputsString) {
+function buildInputsArray(rawInputsString) {
   var returnArray = [];
   const rawMethodInputs = rawInputsString.split(',');
 
@@ -111,15 +110,15 @@ const buildInputsArray = function (rawInputsString) {
   });
 
   return returnArray;
-};
+}
 
 // cap first letter of words of words in string
-const capitalizeFirstLetter = function (string) {
+function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
-};
+}
 
 // convert programatical name to pretty name
-const parseSolidityMethodName = function (rawName) {
+function parseSolidityMethodName(rawName) {
   // break into parts
   var parseNamePieces = rawName.split(/(?=[A-Z])/);
 
@@ -130,10 +129,10 @@ const parseSolidityMethodName = function (rawName) {
 
   // rejoin name with space
   return parseNamePieces.join(' ');
-};
+}
 
 // is bignumber
-const isBigNumber = function (obj) {
+function isBigNumber(obj) {
   if (typeof obj === 'object' && obj !== null) {
     if (typeof obj.__proto__.dividedToIntegerBy !== 'undefined') { // eslint-disable-line
       return true;
@@ -141,17 +140,15 @@ const isBigNumber = function (obj) {
   }
 
   return false;
-};
+}
 
 // parse a solidity method interface
-const parseSolidityMethodInterface = function (methodInterface) {
-  console.log(solidityToABI(methodInterface));
-
+function parseSolidityMethodInterface(methodInterface) {
   return solidityToABI(methodInterface);
-};
+}
 
 // This function handles arrays and objects
-const filterXSSObject = function (obj) {
+function filterXSSObject(obj) {
   // setup new object
   var newObject = {};
 
@@ -192,19 +189,19 @@ const filterXSSObject = function (obj) {
 
   // return object
   return obj;
-};
+}
 
 // base 58 functions for IPFS hashes
-const base58ToHex = function (b58) {
+function base58ToHex(b58) {
   var hexBuf = base58.decode(b58);
   return hexBuf.toString('hex');
-};
+}
 
 // base58 functions for IPFS
-const hexToBase58 = function (hexStr) {
+function hexToBase58(hexStr) {
   var buf = new Buffer(hexStr, 'hex');
   return base58.encode(buf);
-};
+}
 
 module.exports = {
   log: log,

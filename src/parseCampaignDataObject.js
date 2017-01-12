@@ -2,9 +2,11 @@
 const validUrl = require('valid-url');
 const url = require('url');
 const videoUrlInspector = require('video-url-inspector');
+const BigNumber = require('bignumber.js');
 
 // utils
 const utils = require('./utils');
+const emptyWeb3Address = utils.emptyWeb3Address;
 const parseSolidityMethodInterface = utils.parseSolidityMethodInterface; // eslint-disable-line
 
 // utils verifiers
@@ -15,8 +17,6 @@ const isValidCampaignData = utils.isValidCampaignData; // eslint-disable-line
 const isValidCampaign = utils.isValidCampaign; // eslint-disable-line
 const isValidIPFSHash = utils.isValidIPFSHash; // eslint-disable-line
 const isStandardCampaign = utils.isStandardCampaign; // eslint-disable-line
-
-console.log('[{\'constant\':true,\'inputs\':[],\'name\':\'name\',\'outputs\':[{\'name\':\'\',\'type\':\'string\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'name\':\'contributions\',\'outputs\':[{\'name\':\'sender\',\'type\':\'address\'},{\'name\':\'value\',\'type\':\'uint256\'},{\'name\':\'created\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'created\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'totalContributions\',\'outputs\':[{\'name\':\'amount\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'beneficiary\',\'outputs\':[{\'name\':\'\',\'type\':\'address\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':false,\'inputs\':[{\'name\':\'_amounts\',\'type\':\'uint256[]\'}],\'name\':\'contributeMsgValue\',\'outputs\':[{\'name\':\'contributionID\',\'type\':\'uint256\'}],\'payable\':true,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'version\',\'outputs\':[{\'name\':\'\',\'type\':\'string\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'enhancer\',\'outputs\':[{\'name\':\'\',\'type\':\'address\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'earlySuccess\',\'outputs\':[{\'name\':\'\',\'type\':\'bool\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'fundingGoal\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'amountRaised\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'name\':\'refundsClaimed\',\'outputs\':[{\'name\':\'\',\'type\':\'bool\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'owner\',\'outputs\':[{\'name\':\'\',\'type\':\'address\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'contributeMethodABI\',\'outputs\':[{\'name\':\'\',\'type\':\'string\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':false,\'inputs\':[{\'name\':\'_contributionID\',\'type\':\'uint256\'}],\'name\':\'claimRefundOwed\',\'outputs\':[{\'name\':\'balanceClaim\',\'type\':\'address\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'payoutMethodABI\',\'outputs\':[{\'name\':\'\',\'type\':\'string\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':false,\'inputs\':[],\'name\':\'payoutToBeneficiary\',\'outputs\':[],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[{\'name\':\'\',\'type\':\'address\'},{\'name\':\'\',\'type\':\'uint256\'}],\'name\':\'contributionsBySender\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'stage\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[{\'name\':\'_sender\',\'type\':\'address\'}],\'name\':\'totalContributionsBySender\',\'outputs\':[{\'name\':\'amount\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'expiry\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'fundingCap\',\'outputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[],\'name\':\'refundMethodABI\',\'outputs\':[{\'name\':\'\',\'type\':\'string\'}],\'payable\':false,\'type\':\'function\'},{\'constant\':true,\'inputs\':[{\'name\':\'\',\'type\':\'uint256\'}],\'name\':\'refundClaimAddress\',\'outputs\':[{\'name\':\'\',\'type\':\'address\'}],\'payable\':false,\'type\':\'function\'},{\'inputs\':[{\'name\':\'_name\',\'type\':\'string\'},{\'name\':\'_expiry\',\'type\':\'uint256\'},{\'name\':\'_fundingGoal\',\'type\':\'uint256\'},{\'name\':\'_fundingCap\',\'type\':\'uint256\'},{\'name\':\'_beneficiary\',\'type\':\'address\'},{\'name\':\'_owner\',\'type\':\'address\'},{\'name\':\'_enhancer\',\'type\':\'address\'}],\'type\':\'constructor\'},{\'payable\':true,\'type\':\'fallback\'},{\'anonymous\':false,\'inputs\':[{\'indexed\':false,\'name\':\'_contributor\',\'type\':\'address\'}],\'name\':\'ContributionMade\',\'type\':\'event\'},{\'anonymous\':false,\'inputs\':[{\'indexed\':false,\'name\':\'_payoutDestination\',\'type\':\'address\'},{\'indexed\':false,\'name\':\'_payoutAmount\',\'type\':\'uint256\'}],\'name\':\'RefundPayoutClaimed\',\'type\':\'event\'},{\'anonymous\':false,\'inputs\':[{\'indexed\':false,\'name\':\'_payoutDestination\',\'type\':\'address\'}],\'name\':\'BeneficiaryPayoutClaimed\',\'type\':\'event\'}]'); // eslint-disable-line
 
 // parse campaign abi properties
 const parseCampaignDataObject = function (options) {
@@ -42,12 +42,15 @@ const parseCampaignDataObject = function (options) {
     blockNumber: options.blockNumber,
 
     hasEnhancer: false,
+    enhancer: '0x',
     fromStandardCampaignFactory: false,
     fromModel1EnhancerFactory: false,
 
-    daysToGo: 0,
-    minutsToGo: 0,
-    secondsToGo: 0,
+    hasToken: false,
+    token: '0x',
+
+    approximateSecondsToGo: 0,
+    approximateDaysToGo: 0,
     approximateExpiryTimestamp: 0,
     approximateExpiryDate: 0,
 
@@ -92,8 +95,21 @@ const parseCampaignDataObject = function (options) {
     campaignDataObject.hasName = true;
   }
 
+  if (typeof campaignDataObject.token === 'string'
+    && campaignDataObject.token !== '0x'
+    && campaignDataObject.token !== emptyWeb3Address) {
+    campaignDataObject.hasToken = true;
+  }
+
+  if (typeof campaignDataObject.enhancer === 'string'
+    && campaignDataObject.token !== '0x'
+    && campaignDataObject.enhancer !== emptyWeb3Address) {
+    campaignDataObject.hasEnhancer = true;
+  }
+
   // ipfs hash bools
-  if (campaignDataObject.ipfsHash !== '' && typeof campaignDataObject.ipfsHash !== 'undefined') {
+  if (campaignDataObject.ipfsHash !== ''
+    && typeof campaignDataObject.ipfsHash !== 'undefined') {
     campaignDataObject.hasIPFSHash = true;
   }
 
@@ -101,6 +117,16 @@ const parseCampaignDataObject = function (options) {
   if (typeof campaignDataObject.data !== 'undefined' && campaignDataObject.data !== {}) {
     campaignDataObject.hasData = true;
   }
+
+  const secondsDiff = campaignDataObject.expiry.minus(campaignDataObject.blockNumber).times(17).round(0);
+
+  if (secondsDiff.greaterThanOrEqualTo(0)) {
+    campaignDataObject.approximateSecondsToGo = secondsDiff;
+  }
+
+  campaignDataObject.approximateDaysToGo = secondsDiff.dividedBy(new BigNumber('86400')).round(0);
+  campaignDataObject.approximateExpiryTimestamp = secondsDiff.add(new BigNumber((new Date()).getTime() / 1000)).round(0);
+  campaignDataObject.approximateExpiryDate = new Date(campaignDataObject.approximateExpiryTimestamp.toNumber(10) * 1000);
 
   // interface information
   if (campaignDataObject.interface === campaignDataObject.addr) {
