@@ -36,8 +36,13 @@ const getCampaigns = function (options, callback) {
 
   // const selector = options.selector;
   const network = options.network;
-  const ipfsProvider = options.ipfsProvider || { host: 'ipfs.infura.io', port: 5001, protocol: 'https' };
-  const web3Provider = options.web3Provider || new Web3.providers.HttpProvider('https://ropsten.infura.io/');
+  const ipfsProvider = options.ipfsProvider || {
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+  };
+  const defaultProvider = network === 'ropsten' && 'ropsten.' || 'mainnet.';
+  const web3Provider = options.web3Provider || new Web3.providers.HttpProvider(`https://${defaultProvider}infura.io/`);
   const selector = options.selector;
   const expectedCampaignsLoaded = selector.length;
 
@@ -50,7 +55,17 @@ const getCampaigns = function (options, callback) {
   // selector
   selector.forEach(function (campaignID) {
     // get campaign
-    getCampaign({ web3, ipfs, campaignID, network }, function (getCampaignError, getCampaignResult) {
+    getCampaign({
+      web3,
+      ipfs,
+      campaignID,
+      network,
+    }, function (getCampaignError, getCampaignResult) {
+      if (getCampaignError) {
+        callback(getCampaignError, null);
+        return;
+      }
+
       // add attempt
       attemptedCampaignsLoaded += 1;
 

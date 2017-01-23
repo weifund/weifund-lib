@@ -40,6 +40,7 @@ const parseCampaignDataObject = function (options) {
     hasFundingCap: true,
     hasAmountRaised: false,
     blockNumber: options.blockNumber,
+    totalContributions: new BigNumber(0),
 
     hasEnhancer: false,
     enhancer: '0x',
@@ -54,9 +55,9 @@ const parseCampaignDataObject = function (options) {
     approximateExpiryTimestamp: 0,
     approximateExpiryDate: 0,
 
-    hasValidContributeMethodABI: false,
-    hasValidPayoutMethodABI: false,
-    hasValidRefundMethodABI: false,
+    hasValidContributeMethodABI: true,
+    hasValidPayoutMethodABI: true,
+    hasValidRefundMethodABI: true,
 
     hasMailChimp: false,
 
@@ -118,7 +119,11 @@ const parseCampaignDataObject = function (options) {
     campaignDataObject.hasData = true;
   }
 
-  const secondsDiff = campaignDataObject.expiry.minus(campaignDataObject.blockNumber).times(17).round(0);
+  var secondsDiff = campaignDataObject.expiry.minus(campaignDataObject.blockNumber).times(17).round(0); // eslint-disable-line
+
+  if (secondsDiff.lt(0)) {
+    secondsDiff = new BigNumber(0);
+  }
 
   if (secondsDiff.greaterThanOrEqualTo(0)) {
     campaignDataObject.approximateSecondsToGo = secondsDiff;
@@ -127,6 +132,11 @@ const parseCampaignDataObject = function (options) {
   campaignDataObject.approximateDaysToGo = secondsDiff.dividedBy(new BigNumber('86400')).round(0);
   campaignDataObject.approximateExpiryTimestamp = secondsDiff.add(new BigNumber((new Date()).getTime() / 1000)).round(0);
   campaignDataObject.approximateExpiryDate = new Date(campaignDataObject.approximateExpiryTimestamp.toNumber(10) * 1000);
+
+  // if days to go less than zero
+  if (campaignDataObject.approximateDaysToGo.lt(new BigNumber(0))) {
+    campaignDataObject.approximateDaysToGo = new BigNumber(0);
+  }
 
   // interface information
   if (campaignDataObject.interface === campaignDataObject.addr) {
