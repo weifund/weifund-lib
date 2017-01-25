@@ -1,6 +1,6 @@
 {
   "name": "weifund-lib",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "A default WeiFund code package for node modules (no babel)",
   "scripts": {
     "start": "",
@@ -35,7 +35,7 @@
     "!**/__tests__"
   ],
   "keywords": [
-    "default",
+    "lib",
     "weifund"
   ],
   "license": "MIT",
@@ -50,7 +50,7 @@
     "valid-url": "1.0.9",
     "video-url-inspector": "1.0.2",
     "web3": "0.17.0-alpha",
-    "weifund-contracts": "2.0.5",
+    "weifund-contracts": "2.0.6",
     "xss": "0.2.13"
   },
   "devDependencies": {

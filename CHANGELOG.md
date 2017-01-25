@@ -1,3 +1,7 @@
+# 0.1.8 -- new updates
+
+1. Contract package updates
+
 # 0.1.2 -- Scaffolding
 
 1. Code of Conduct established
